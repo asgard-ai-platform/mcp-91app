@@ -1,0 +1,43 @@
+[project]
+name = "mcp-91app"
+version = "0.2.0"
+description = "MCP server wrapping the 91app Admin API into 103 AI Agent-callable tools across 16 API categories (4 auth methods)"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [
+    { name = "Asgard AI Platform" },
+]
+keywords = ["mcp", "91app", "e-commerce", "ai-agent", "claude"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries",
+]
+dependencies = [
+    "requests",
+    "mcp",
+    "pydantic",
+]
+
+[project.urls]
+Homepage = "https://github.com/asgard-ai-platform/mcp-91app"
+Repository = "https://github.com/asgard-ai-platform/mcp-91app"
+Issues = "https://github.com/asgard-ai-platform/mcp-91app/issues"
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project.scripts]
+mcp-91app = "mcp_server:main"
+
+[tool.setuptools]
+py-modules = ["mcp_server", "app"]
+
+[tool.setuptools.packages.find]
+include = ["config*", "tools*"]

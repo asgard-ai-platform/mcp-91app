@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "91app": {
+      "command": "python",
+      "args": ["mcp_server.py"],
+      "cwd": "${PWD}",
+      "env": {
+        "PYTHONPATH": "${PWD}",
+        "APP_91APP_API_KEY": "${APP_91APP_API_KEY}",
+        "APP_91APP_BASE_URL": "${APP_91APP_BASE_URL}",
+        "APP_91APP_SHOP_ID": "${APP_91APP_SHOP_ID}"
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.DS_Store
+.env
+*.tmp
+.venv/
+venv/
+dist/
+*.egg-info
+.claude/*.md
+.claude/*.local.*
+_tests/

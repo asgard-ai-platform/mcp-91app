@@ -1,0 +1,176 @@
+{
+  "server": {
+    "name": "mcp-91app",
+    "version": "0.1.0",
+    "description": "91app Admin API — query-only MCP tools for orders, products, promotions and delivery",
+    "auth": {
+      "type": "api_key",
+      "header": "x-api-key",
+      "env_var": "APP_91APP_API_KEY"
+    },
+    "http_method": "POST",
+    "note": "Categories 1-9 use POST for all endpoints (including queries). Categories 10-14 use REST (GET/POST/PUT/DELETE).",
+    "api_inventory": {
+      "total_categories": 16,
+      "hidden_categories": 5,
+      "total_endpoints": 237,
+      "query_endpoints": 111,
+      "write_endpoints": 123,
+      "webhook_endpoints": 3,
+      "implemented_tools": 17,
+      "unique_endpoints_deduped": 221,
+      "auth_methods": [
+        "x-api-key (Cat.1-9)",
+        "n1-api-key (Cat.10-11,15)",
+        "N1-API-KEY + N1-DATA-SIGNATURE HMAC-SHA256 (Cat.12-13)",
+        "ny-api-token / n1-api-key (Cat.14)"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "name": "get_order_list",
+      "domain": "order",
+      "endpoint": "/ec/V2/SalesOrder/GetList",
+      "description": "訂單清單查詢（日期範圍最多7天）",
+      "required_params": ["ShopId", "StartDate", "EndDate"],
+      "optional_params": ["DateType", "OrderStatus", "OrderDeliverType", "Position", "Count"],
+      "max_count": 100
+    },
+    {
+      "name": "get_order_detail",
+      "domain": "order",
+      "endpoint": "/ec/V2/SalesOrder/Get",
+      "description": "訂單明細查詢",
+      "required_params": ["ShopId"],
+      "optional_params": ["TGCode", "TMCode", "TSCode"],
+      "note": "TGCode 或 TMCode 至少擇一"
+    },
+    {
+      "name": "get_return_order_list",
+      "domain": "order",
+      "endpoint": "/ec/V2/ReturnGoodsOrder/GetList",
+      "description": "退貨單清單查詢",
+      "required_params": ["ShopId", "StartDate", "EndDate"],
+      "optional_params": ["ReturnGoodDateType", "ReturnGoodStatus", "Position", "Count"],
+      "max_count": 100
+    },
+    {
+      "name": "get_return_order_detail",
+      "domain": "order",
+      "endpoint": "/ec/V2/ReturnGoodsOrder/Get",
+      "description": "退貨單明細查詢",
+      "required_params": ["ShopId", "ReturnGoodDetailId"],
+      "optional_params": []
+    },
+    {
+      "name": "get_exchange_order_list",
+      "domain": "order",
+      "endpoint": "/ec/V2/ChangeGoodsOrder/GetList",
+      "description": "換貨單清單查詢",
+      "required_params": ["ShopId", "StartDate", "EndDate"],
+      "optional_params": ["ChangeGoodDateType", "ChangeGoodStatus", "Position", "Count"],
+      "max_count": 100
+    },
+    {
+      "name": "get_product_list",
+      "domain": "product",
+      "endpoint": "/ec/V1/SalePage/GetSKUList",
+      "description": "商品 SKU 清單查詢",
+      "required_params": ["ShopId", "StartDate", "EndDate"],
+      "optional_params": ["DateType", "IsClosed", "ShopCategoryId", "Position", "Count"],
+      "max_count": 200
+    },
+    {
+      "name": "get_product_detail",
+      "domain": "product",
+      "endpoint": "/ec/V1/SalePage/GetMainDetail",
+      "description": "商品完整明細查詢（SalePageId）",
+      "required_params": ["Id"],
+      "optional_params": []
+    },
+    {
+      "name": "get_product_stock",
+      "domain": "product",
+      "endpoint": "/ec/V1/SalePage/GetStock",
+      "description": "商品庫存查詢",
+      "required_params": ["Id"],
+      "optional_params": ["SkuId"]
+    },
+    {
+      "name": "get_shop_categories",
+      "domain": "product",
+      "endpoint": "/ec/V1/Category/GetShopCategory",
+      "description": "商店自訂分類清單查詢",
+      "required_params": ["ShopId"],
+      "optional_params": []
+    },
+    {
+      "name": "get_category_tree",
+      "domain": "product",
+      "endpoint": "/ec/V1/Category/GetCategory",
+      "description": "91app 系統商品分類樹狀查詢",
+      "required_params": [],
+      "optional_params": ["SourceCategoryId"]
+    },
+    {
+      "name": "get_shop_payment_methods",
+      "domain": "product",
+      "endpoint": "/ec/V1/Shop/GetPayment",
+      "description": "商店付款方式清單查詢",
+      "required_params": [],
+      "optional_params": []
+    },
+    {
+      "name": "get_shop_shipping_methods",
+      "domain": "product",
+      "endpoint": "/ec/V1/Shop/GetShipping",
+      "description": "商店配送方式清單查詢",
+      "required_params": ["Id"],
+      "optional_params": []
+    },
+    {
+      "name": "get_promotions",
+      "domain": "promotion",
+      "endpoint": "/ec/V2/Promotion/GetPromotions",
+      "description": "折扣活動清單查詢（最多1000筆）",
+      "required_params": ["ShopId"],
+      "optional_params": ["PromotionId", "DateTimeType", "StartDateTime", "EndDateTime", "Status", "PromotionTypeDef"],
+      "max_count": 1000
+    },
+    {
+      "name": "get_promotion_detail",
+      "domain": "promotion",
+      "endpoint": "/ec/V2/Promotion/GetPromotionDetail",
+      "description": "折扣活動完整明細查詢",
+      "required_params": ["ShopId", "Id"],
+      "optional_params": []
+    },
+    {
+      "name": "get_promotion_salepages",
+      "domain": "promotion",
+      "endpoint": "/ec/V2/Promotion/GetPromotionSalePages",
+      "description": "折扣活動適用商品清單查詢",
+      "required_params": ["ShopId", "Id"],
+      "optional_params": ["Tag"]
+    },
+    {
+      "name": "get_shipping_order",
+      "domain": "delivery",
+      "endpoint": "/ec/V2/ShippingOrder/Get",
+      "description": "貨運單查詢（含PII）",
+      "required_params": ["ShopId", "ShippingOrderCode"],
+      "optional_params": ["TSCode"],
+      "pii": true,
+      "rate_limit": "100 requests/sec"
+    },
+    {
+      "name": "get_shipping_countries",
+      "domain": "delivery",
+      "endpoint": "/ec/V2/Shop/GetShippingCountryList",
+      "description": "配送國家清單查詢",
+      "required_params": ["ShopId"],
+      "optional_params": []
+    }
+  ]
+}
