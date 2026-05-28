@@ -3,13 +3,40 @@ import os
 import hashlib
 import hmac
 import time
+import warnings
+
+
+def _env_int(name: str, default: int = 0) -> int:
+    """Parse an integer env var, tolerating unset or non-numeric values.
+
+    Returns `default` when the variable is unset, empty, or non-numeric
+    (e.g. an unexpanded `${VAR}` placeholder from an MCP host). This keeps
+    the module importable when credentials are missing — tools that need a
+    real SHOP_ID will surface the misconfiguration at API call time instead
+    of taking down the whole MCP server at import. A non-numeric value emits
+    a warning so misconfigurations remain visible.
+    """
+    raw = os.environ.get(name)
+    if not raw:
+        return default
+    try:
+        return int(raw)
+    except ValueError:
+        warnings.warn(
+            f"{name} is set to non-numeric value {raw!r}; "
+            f"falling back to {default}. "
+            "Check for an unexpanded ${...} placeholder or a typo.",
+            stacklevel=2,
+        )
+        return default
+
 
 # ============================================================
 # Auth Method 1: x-api-key（Cat.1-9 Admin API 核心）
 # ============================================================
 API_KEY = os.environ.get("APP_91APP_API_KEY", "")
 BASE_URL = os.environ.get("APP_91APP_BASE_URL", "https://api.91app.com")
-SHOP_ID = int(os.environ.get("APP_91APP_SHOP_ID", "0"))
+SHOP_ID = _env_int("APP_91APP_SHOP_ID")
 
 # ============================================================
 # Auth Method 2: n1-api-key（Cat.10-11 IMS, Cat.15 商品搜尋）
