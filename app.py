@@ -6,4 +6,4 @@
 """
 from mcp.server.fastmcp import FastMCP
 
-mcp = FastMCP("mcp-91app", version="0.2.0")
+mcp = FastMCP("mcp-91app")
