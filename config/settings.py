@@ -3,6 +3,7 @@ import os
 import hashlib
 import hmac
 import time
+import warnings
 
 
 def _env_int(name: str, default: int = 0) -> int:
@@ -12,7 +13,8 @@ def _env_int(name: str, default: int = 0) -> int:
     (e.g. an unexpanded `${VAR}` placeholder from an MCP host). This keeps
     the module importable when credentials are missing — tools that need a
     real SHOP_ID will surface the misconfiguration at API call time instead
-    of taking down the whole MCP server at import.
+    of taking down the whole MCP server at import. A non-numeric value emits
+    a warning so misconfigurations remain visible.
     """
     raw = os.environ.get(name)
     if not raw:
@@ -20,6 +22,12 @@ def _env_int(name: str, default: int = 0) -> int:
     try:
         return int(raw)
     except ValueError:
+        warnings.warn(
+            f"{name} is set to non-numeric value {raw!r}; "
+            f"falling back to {default}. "
+            "Check for an unexpanded ${...} placeholder or a typo.",
+            stacklevel=2,
+        )
         return default
 
 
